@@ -22,15 +22,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             // Themes are a way to style composable functions
             ComposeDemoTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                // Reusable composable, this cleans up the onCreate function and allows us to use
+                // composable elsewhere as well
+                MyApp(modifier = Modifier.fillMaxSize())
             }
         }
+    }
+}
+
+// Best practice when extracting a reusable composable is to always give it a modifier with a default value
+@Composable
+fun MyApp(modifier: Modifier = Modifier) {
+    // A surface container using the 'background' color from the theme
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Greeting("Android")
     }
 }
 
@@ -53,6 +61,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     ComposeDemoTheme {
-        Greeting("Android")
+        MyApp()
     }
 }
