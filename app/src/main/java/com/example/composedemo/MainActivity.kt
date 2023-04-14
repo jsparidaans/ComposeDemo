@@ -3,8 +3,11 @@ package com.example.composedemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,42 +25,50 @@ class MainActivity : ComponentActivity() {
         setContent {
             // Themes are a way to style composable functions
             ComposeDemoTheme {
-                // Reusable composable, this cleans up the onCreate function and allows us to use
-                // composable elsewhere as well
                 MyApp(modifier = Modifier.fillMaxSize())
             }
         }
     }
 }
 
-// Best practice when extracting a reusable composable is to always give it a modifier with a default value
 @Composable
-fun MyApp(modifier: Modifier = Modifier) {
-    // A surface container using the 'background' color from the theme
-    Surface(
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Greeting("Android")
+fun MyApp(
+    modifier: Modifier = Modifier,
+    names: List<String> = listOf("World", "Compose")
+) {
+    // Because composable functions are regular old kotlin functions things like
+    // for loops are possible within them
+    Column(modifier = modifier.padding(vertical = 4.dp)) {
+        for (name in names)
+            Greeting(name = name)
     }
 }
 
-// Composables are denoted with this annotation. It enables a function to call other @Composable functions within
 @Composable
 fun Greeting(name: String) {
-    Surface(color = MaterialTheme.colorScheme.primary) {
-        // Note how the text automatically changed color from black to white
-        Text(
-            text = "Hello $name!",
-            modifier = Modifier
-                // add a padding on al sides of 24dp
-                .padding(24.dp)
-        )
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+    ) {
+        // Row places its child composables horizontally next to one another
+        Row(modifier = Modifier.padding(24.dp)) {
+
+            // Column places its child composables vertically underneath each other
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Text(text = "Hello, ")
+                Text(text = "$name!")
+            }
+            ElevatedButton(onClick = { /*TODO*/ }) {
+                Text(text = "Show more")
+            }
+        }
     }
 }
 
-// This annotation allows us to preview our composables in the IDE
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 320)
 @Composable
 fun DefaultPreview() {
     ComposeDemoTheme {
