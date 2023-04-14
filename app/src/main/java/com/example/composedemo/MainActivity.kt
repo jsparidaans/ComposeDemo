@@ -12,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,19 +52,22 @@ fun Greeting(name: String) {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
-        // Row places its child composables horizontally next to one another
+        // use remember for a variable to survive recomposition
+        val expanded = remember { mutableStateOf(false) }
+        val extraPadding = if (expanded.value) 48.dp else 0.dp
+
         Row(modifier = Modifier.padding(24.dp)) {
 
-            // Column places its child composables vertically underneath each other
             Column(
                 modifier = Modifier
                     .weight(1f)
+                    .padding(bottom = extraPadding)
             ) {
                 Text(text = "Hello, ")
                 Text(text = "$name!")
             }
-            ElevatedButton(onClick = { /*TODO*/ }) {
-                Text(text = "Show more")
+            ElevatedButton(onClick = { expanded.value = !expanded.value }) {
+                Text(text = if (expanded.value) "Show less" else "Show more")
             }
         }
     }
